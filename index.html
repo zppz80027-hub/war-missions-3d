@@ -324,21 +324,49 @@ function makeWarrior(color, name){
   const g = new THREE.Group();
   const mat = lam(color), dark = lam(0x232c44), skin = lam(0xf0c194);
   const steel = new THREE.MeshLambertMaterial({color:0xd7e3f4, emissive:0x33415e});
+  const gold = lam(0xffd97a);
 
+  // torso with chest plate
   const body = new THREE.Mesh(box(0.85,1.0,0.5), mat); body.position.y=1.1; g.add(body);
+  const chest = new THREE.Mesh(box(0.6,0.5,0.08), steel); chest.position.set(0,1.25,0.26); g.add(chest);
   const belt = new THREE.Mesh(box(0.88,0.16,0.53), dark); belt.position.y=0.68; g.add(belt);
+  const buckle = new THREE.Mesh(box(0.2,0.12,0.06), gold); buckle.position.set(0,0.68,0.28); g.add(buckle);
+  // shoulder pads
+  [-0.58,0.58].forEach(x=>{
+    const pad = new THREE.Mesh(sph(0.22,8), steel); pad.position.set(x,1.62,0); pad.scale.y=0.7; g.add(pad);
+  });
+  // head + helmet with plume
   const head = new THREE.Mesh(sph(0.32), skin); head.position.y=1.92; g.add(head);
-  const helm = new THREE.Mesh(box(0.5,0.28,0.5), mat); helm.position.y=2.12; g.add(helm);
-  const crest = new THREE.Mesh(box(0.1,0.3,0.55), lam(0xffd97a)); crest.position.y=2.32; g.add(crest);
+  const helm = new THREE.Mesh(cyl(0.3,0.34,0.3,8), steel); helm.position.y=2.12; g.add(helm);
+  const crest = new THREE.Mesh(box(0.1,0.34,0.6), lam(0xe11d48)); crest.position.y=2.36; g.add(crest);
+  // glowing eyes
+  const eyeMat = new THREE.MeshBasicMaterial({color:0x111111});
+  [-0.12,0.12].forEach(x=>{
+    const e = new THREE.Mesh(sph(0.055,6), eyeMat); e.position.set(x,1.94,0.29); g.add(e);
+  });
+  // cape
+  const cape = new THREE.Mesh(box(0.7,0.95,0.08), lam(0x7c2d12)); cape.position.set(0,1.15,-0.3); cape.rotation.x=0.12; g.add(cape);
+  // arms, legs, boots, gloves
   const legL = new THREE.Mesh(box(0.28,0.62,0.32), dark); legL.position.set(-0.2,0.31,0); g.add(legL);
   const legR = new THREE.Mesh(box(0.28,0.62,0.32), dark); legR.position.set(0.2,0.31,0); g.add(legR);
+  [-0.2,0.2].forEach(x=>{
+    const boot = new THREE.Mesh(box(0.32,0.18,0.42), lam(0x1c1917)); boot.position.set(x,0.09,0.04); g.add(boot);
+  });
   const armL = new THREE.Mesh(box(0.24,0.7,0.24), mat); armL.position.set(-0.58,1.25,0); g.add(armL);
+  const gloveL = new THREE.Mesh(box(0.26,0.22,0.26), dark); gloveL.position.set(-0.58,0.85,0); g.add(gloveL);
+  // shield on left arm
+  const shield = new THREE.Mesh(cyl(0.34,0.34,0.08,10), steel); shield.position.set(-0.78,1.2,0.1); shield.rotation.z=Math.PI/2; g.add(shield);
+  const shieldBoss = new THREE.Mesh(sph(0.1,8), gold); shieldBoss.position.set(-0.86,1.2,0.1); g.add(shieldBoss);
 
   const armR = new THREE.Group(); armR.position.set(0.58,1.5,0); g.add(armR);
   const armMesh = new THREE.Mesh(box(0.24,0.7,0.24), mat); armMesh.position.y=-0.3; armR.add(armMesh);
-  const sword = new THREE.Group(); sword.position.set(0,-0.62,0.1); armR.add(sword);
-  const hilt = new THREE.Mesh(box(0.1,0.3,0.1), dark); sword.add(hilt);
-  const blade = new THREE.Mesh(box(0.14,1.5,0.05), steel); blade.position.y=0.9; sword.add(blade);
+  const gloveR = new THREE.Mesh(box(0.26,0.2,0.26), dark); gloveR.position.y=-0.62; armR.add(gloveR);
+  const sword = new THREE.Group(); sword.position.set(0,-0.68,0.1); armR.add(sword);
+  const hilt = new THREE.Mesh(box(0.1,0.32,0.1), dark); sword.add(hilt);
+  const pommel = new THREE.Mesh(sph(0.08,8), gold); pommel.position.y=-0.2; sword.add(pommel);
+  const guard = new THREE.Mesh(box(0.4,0.08,0.12), gold); guard.position.y=0.18; sword.add(guard);
+  const blade = new THREE.Mesh(box(0.15,1.5,0.06), steel); blade.position.y=0.95; sword.add(blade);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.09,0.25,4), steel); tip.position.y=1.82; tip.rotation.y=Math.PI/4; sword.add(tip);
   sword.rotation.x = Math.PI/2 - 0.25;
 
   const label = makeNameSprite(name, '#ffffff');
